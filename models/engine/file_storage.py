@@ -12,6 +12,9 @@ class FileStorage():
         key = f'{self.__class__.__name__}.{self.id}'
         self.__objects[key] = obj
 
+    # Used .to_dict to convert updated and created at from datetime to a string
+    # using isoformat
+    # So since we already did that in base.model module, we called it.
     def save(self):
         with open(self.__file_path, 'w', encoding='utf-8') as f:
             d = {key : value.to_dict for key, value in self.__objects.items()}
