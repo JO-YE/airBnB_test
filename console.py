@@ -109,6 +109,8 @@ class HBNBCommand(cmd.Cmd):
             print('** attribute name missing **')
         elif len(args) == 3:
             print('** value missing **')
+       # elif len(args) == 3 and type(eval(args[2]) == dict):
+        #    continue
         else:
             obj_class = args[0]
             obj_id = args[1]
@@ -141,6 +143,7 @@ class HBNBCommand(cmd.Cmd):
             elif args[1] == 'count()':
                 stor = storage.all().items()
                 lists = [v for k, v in stor if k.startswith(args[0])]
+# startswith is an inbuilt fxn in python
                 print(len(lists))
             elif args[1].startswith('show'):
                 id_ = args[1].split('"')[1]
@@ -149,11 +152,20 @@ class HBNBCommand(cmd.Cmd):
                 id_d = args[1].split('"')[1]
                 self.do_destroy(f"{args[0]} {id_d}")
             elif args[1].startswith('update'):
-                print(arg[1].split)
+               # print(args[1])
+                split_ = args[1].split('"')
+                print(split_)
                 id_ = args[1].split('"')[1]
-                attr_name = args[1].split('"')[2]
-                attr_value = args[1].split('"')[3]
+                attr_name = args[1].split('"')[3]
+                split_ = split_[4].split(",")[1].rstrip(")").strip()
+# rstrip() method in Python is used to remove any trailing characters
+# from the right end of a string
+# strip() method is then used to remove any leading or trailing whitespaces
+# from the resulting string
+               # print(type((split_)))
+                attr_value = split_
                 self.do_update(f"{args[0]} {id_} {attr_name} {attr_value}")
+# another way to go about do_update is in the pld record. (@53 min)
 
 if __name__ == '__main__':
     HBNBCommand().cmdloop()
