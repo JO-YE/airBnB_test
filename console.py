@@ -109,8 +109,6 @@ class HBNBCommand(cmd.Cmd):
             print('** attribute name missing **')
         elif len(args) == 3:
             print('** value missing **')
-       # elif len(args) == 3 and type(eval(args[2]) == dict):
-        #    continue
         else:
             obj_class = args[0]
             obj_id = args[1]
@@ -152,20 +150,24 @@ class HBNBCommand(cmd.Cmd):
                 id_d = args[1].split('"')[1]
                 self.do_destroy(f"{args[0]} {id_d}")
             elif args[1].startswith('update'):
-               # print(args[1])
-                split_ = args[1].split('"')
-                print(split_)
-                id_ = args[1].split('"')[1]
-                attr_name = args[1].split('"')[3]
-                split_ = split_[4].split(",")[1].rstrip(")").strip()
-# rstrip() method in Python is used to remove any trailing characters
-# from the right end of a string
-# strip() method is then used to remove any leading or trailing whitespaces
-# from the resulting string
-               # print(type((split_)))
-                attr_value = split_
-                self.do_update(f"{args[0]} {id_} {attr_name} {attr_value}")
-# another way to go about do_update is in the pld record. (@53 min)
+                split_ = args[1].split('(')
+                split_ = split_[1].split(')')
+                if '{' in split_[0]: # of a dic is present
+                    split_ = split_[0].split(", {")
+                    id_ = split_[0].strip('"')
+                    dic_ = '{' + split_[1]
+                    dic_ = eval(dic_)
+
+                    for k, v in dic_.items():
+                        self.do_update(f"{args[0]} {id_} {k} {v}")
+                else:
+                    # if no dic is passed
+                    split_ = split_[0].split(", ")
+                    id_ = split_[0].strip('"')
+                    attr_name = split_[1].strip('"')
+                    attr_value = split_[2].strip('"')
+
+                    self.do_update(f"{args[0]} {id_} {attr_name} {attr_value}")
 
 if __name__ == '__main__':
     HBNBCommand().cmdloop()
